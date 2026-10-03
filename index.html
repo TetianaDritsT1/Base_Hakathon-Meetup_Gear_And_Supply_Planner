@@ -3,265 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SwapNorm — DEX на Base</title>
+    <title>Base Meetup & Hackathon Supply Planner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            background-color: #0b0f19;
-            color: #f1f5f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .dex-container {
-            background-color: #1e293b;
-            border-radius: 20px;
-            padding: 24px;
-            width: 420px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid #334155;
-        }
-        .dex-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .dex-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: #38bdf8;
-        }
-        .connect-btn {
-            background-color: #3b82f6;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .connect-btn:hover {
-            background-color: #2563eb;
-        }
-        .swap-box {
-            background-color: #0f172a;
-            border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 12px;
-            border: 1px solid #1e293b;
-        }
-        .swap-box label {
-            font-size: 13px;
-            color: #94a3b8;
-            display: block;
-            margin-bottom: 6px;
-        }
-        .input-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .swap-input {
-            background: transparent;
-            border: none;
-            color: #ffffff;
-            font-size: 24px;
-            width: 60%;
-            outline: none;
-        }
-        .token-select {
-            background-color: #334155;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            outline: none;
-        }
-        .action-btn {
-            width: 100%;
-            background-color: #3b82f6;
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 14px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 10px;
-        }
-        .action-btn:hover {
-            background-color: #2563eb;
-        }
-        .status-log {
-            margin-top: 15px;
-            font-size: 13px;
-            color: #cbd5e1;
-            background: #0f172a;
-            padding: 10px;
-            border-radius: 8px;
-            word-break: break-all;
-            max-height: 100px;
-            overflow-y: auto;
-        }
+        body { box-sizing: border-box; }
+        .item-card { transition: all 0.3s ease; }
+        .item-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,82,255,0.15); }
     </style>
 </head>
-<body>
+<body class="bg-neutral-950 text-white min-h-full">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold mb-2">🏕️ Base Meetup & Hackathon Gear</h1>
+                <p class="text-neutral-400">Интерактивный конструктор закупок для команды разработчиков</p>
+            </div>
 
-<div class="dex-container">
-    <div class="dex-header">
-        <div class="dex-title">SwapNorm</div>
-        <button id="connectWalletBtn" class="connect-btn" onclick="connectWallet()">Подключить</button>
-    </div>
+            <!-- Participant Selector -->
+            <div class="bg-neutral-900 border border-neutral-800 rounded-2xl shadow-xl p-6 mb-6">
+                <h2 class="text-2xl font-semibold mb-4 text-center">Количество участников митапа</h2>
+                <div class="flex justify-center items-center gap-4 mb-4">
+                    <button id="decBtn" class="bg-blue-600 hover:bg-blue-700 w-12 h-12 rounded-full text-xl font-bold transition-transform hover:scale-105">-</button>
+                    <div class="text-center">
+                        <div id="partCount" class="text-4xl font-bold text-blue-500">6</div>
+                        <div class="text-sm text-neutral-400">участников</div>
+                    </div>
+                    <button id="incBtn" class="bg-blue-600 hover:bg-blue-700 w-12 h-12 rounded-full text-xl font-bold transition-transform hover:scale-105">+</button>
+                </div>
+                <div class="flex justify-center gap-2 flex-wrap">
+                    <button class="preset bg-neutral-800 hover:bg-neutral-700 px-4 py-2 rounded-xl text-sm font-medium" data-val="4">4 человека</button>
+                    <button class="preset bg-neutral-800 hover:bg-neutral-700 px-4 py-2 rounded-xl text-sm font-medium" data-val="6">6 человек</button>
+                    <option></option>
+                    <button class="preset bg-neutral-800 hover:bg-neutral-700 px-4 py-2 rounded-xl text-sm font-medium" data-val="10">10 человек</button>
+                    <button class="preset bg-neutral-800 hover:bg-neutral-700 px-4 py-2 rounded-xl text-sm font-medium" data-val="20">20 человек (Хакатон)</button>
+                </div>
+            </div>
 
-    <div class="swap-box">
-        <label>Продаете</label>
-        <div class="input-row">
-            <input type="number" id="amountIn" class="swap-input" placeholder="0.0">
-            <select id="tokenIn" class="token-select">
-                <option value="ETH">ETH</option>
-                <option value="USDC">USDC</option>
-                <option value="USDbC">USDbC</option>
-                <option value="DAI">DAI</option>
-            </select>
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Shopping List -->
+                <div class="bg-neutral-900 border border-neutral-800 rounded-2xl shadow-xl p-6">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">🛒 Чек-лист снабжения</h3>
+                    <div id="listContainer" class="space-y-3 max-h-[400px] overflow-y-auto pr-2"></div>
+                </div>
+
+                <!-- Schedule & Info -->
+                <div class="bg-neutral-900 border border-neutral-800 rounded-2xl shadow-xl p-6">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center gap-2">📝 План мероприятия</h3>
+                    <div class="space-y-4 text-sm text-neutral-300">
+                        <div class="flex items-start gap-3 bg-neutral-800/50 p-3 rounded-xl">
+                            <span class="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0">1</span>
+                            <span>Сбор команды, настройка нод и репозиториев Base.</span>
+                        </div>
+                        <div class="flex items-start gap-3 bg-neutral-800/50 p-3 rounded-xl">
+                            <span class="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0">2</span>
+                            <span>Командный хакатон по разработке децентрализованных утилит.</span>
+                        </div>
+                        <div class="flex items-start gap-3 bg-neutral-800/50 p-3 rounded-xl">
+                            <span class="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0">3</span>
+                            <span>Тестирование смарт-контрактов в тестнете Base.</span>
+                        </div>
+                        <div class="flex items-start gap-3 bg-neutral-800/50 p-3 rounded-xl">
+                            <span class="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0">4</span>
+                            <span>Презентация проектов и барбекю на природе!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="mt-6 flex justify-center gap-4">
+                <button id="printBtn" class="bg-neutral-800 hover:bg-neutral-700 text-white px-6 py-3 rounded-xl font-medium flex items-center gap-2 transition-all">🖨️ Печать списка</button>
+                <button id="copyBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-medium flex items-center gap-2 transition-all">📋 Копировать чек-лист</button>
+            </div>
         </div>
     </div>
 
-    <div class="swap-box">
-        <label>Получаете (приблизительно)</label>
-        <div class="input-row">
-            <input type="number" id="amountOut" class="swap-input" placeholder="0.0" disabled>
-            <select id="tokenOut" class="token-select">
-                <option value="USDC">USDC</option>
-                <option value="ETH">ETH</option>
-                <option value="USDbC">USDbC</option>
-                <option value="DAI">DAI</option>
-            </select>
-        </div>
-    </div>
+    <script>
+        const baseItems = [
+            { name: 'Ноутбук / Зарядки', amount: 1, unit: 'шт/чел', emoji: '💻', category: 'Техника' },
+            { name: 'Павербанк от 20000mAh', amount: 1, unit: 'шт', emoji: '🔋', category: 'Техника' },
+            { name: 'Мясо / Маринад для барбекю', amount: 400, unit: 'гр', emoji: '🥩', category: 'Еда' },
+            { name: 'Овощи и зелень', amount: 200, unit: 'гр', emoji: '🥗', category: 'Еда' },
+            { name: 'Питьевая вода', amount: 1.5, unit: 'л', emoji: '💧', category: 'Напитки' },
+            { name: 'Энергетики / Кофе', amount: 2, unit: 'шт', emoji: '⚡', category: 'Напитки' },
+            { name: 'Одноразовая посуда', amount: 5, unit: 'прд', emoji: '🍽️', category: 'Хозтовары' },
+            { name: 'Влажные салфетки', amount: 1, unit: 'пач', emoji: '🧻', category: 'Хозтовары' }
+        ];
 
-    <button class="action-btn" onclick="executeRealSwap()">Выполнить обмен</button>
+        let count = 6;
+        const countEl = document.getElementById('partCount');
+        const listEl = document.getElementById('listContainer');
 
-    <div id="statusLog" class="status-log" style="display:none;">Лог транзакции появится здесь...</div>
-</div>
+        function render() {
+            listEl.innerHTML = '';
+            const cats = {};
+            baseItems.forEach(item => {
+                if (!cats[item.category]) cats[item.category] = [];
+                let total = item.amount * (item.unit === || 'шт/чел'  item.unit === 'шт' || item.unit === 'прд' || item.unit === 'пач' ? (item.unit === 'шт/чел' ? count : Math.ceil(count * item.amount / 6)) : count * item.amount / 6);
+                cats[item.category].push({ ...item, total: Math.round(total * 10) / 10 });
+            });
 
-<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-<script>
-    const CONTRACT_ADDRESS = "0x002B4e7c39865d03E27D618A2AF2Bd8C54EDd549";
-    
-    const TOKEN_ADDRESSES = {
-        "ETH": "0x4200000000000000000000000000000000000006",
-        "USDC": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
-        "USDbC": "0xd9aAEc86B65D86f6a7B5B1b0c42FFA531710b6Ca",
-        "DAI": "0x50c5725949A6F0c72E6C4a641F24049A917DB0cb"
-    };
+            Object.keys(cats).forEach(cat => {
+                const h = document.createElement('div');
+                h.className = 'font-semibold text-xs text-blue-400 uppercase tracking-wider mb-2 mt-3';
+                h.textContent = cat;
+                listEl.appendChild(h);
 
-    const CONTRACT_ABI = [
-        "function executeSwap(address tokenIn, address tokenOut, uint256 amountIn, uint256 amountOutMin, bool isEthIn) external payable"
-    ];
-
-    let provider, signer, userAddress;
-
-    async function connectWallet() {
-        if (window.ethereum) {
-            try {
-                provider = new ethers.providers.Web3Provider(window.ethereum);
-                await provider.send("eth_requestAccounts", []);
-                
-                const network = await provider.getNetwork();
-                if (network.chainId !== 8453) {
-                    alert("Пожалуйста, переключите сеть в MetaMask на Base!");
-                    try {
-                        await window.ethereum.request({
-                            method: 'wallet_switchEthereumChain',
-                            params: [{ chainId: '0x2105' }],
-                        });
-                    } catch (switchError) {
-                        return;
-                    }
-                }
-
-                signer = provider.getSigner();
-                userAddress = await signer.getAddress();
-                
-                const btn = document.getElementById("connectWalletBtn");
-                btn.innerText = userAddress.substring(0, 6) + "..." + userAddress.substring(38);
-                logStatus("Кошелек успешно подключен!");
-            } catch (error) {
-                console.error(error);
-                alert("Ошибка подключения кошелька.");
-            }
-        } else {
-            alert("Установите MetaMask или Coinbase Wallet!");
+                cats[cat].forEach(i => {
+                    const el = document.createElement('div');
+                    el.className = 'item-card bg-neutral-800/60 rounded-xl p-3 flex items-center justify-between border border-neutral-700/50';
+                    el.innerHTML = <div class="flex items-center gap-3"><span class="text-xl">${i.emoji}</span><span class="font-medium">${i.name}</span></div><span class="text-blue-400 font-bold">${i.total} ${i.unit === 'шт/чел' ? 'шт' : i.unit}</span>;
+                    listEl.appendChild(el);
+                });
+            });
         }
-    }
-
-    async function executeRealSwap() {
-        if (!signer) {
-            alert("Сначала подключите кошелек!");
-            return;
+        function updateCount(val) {
+            count = Math.max(1, Math.min(50, val));
+            countEl.textContent = count;
+            render();
         }
 
-        const amountInVal = document.getElementById("amountIn").value;
-        const tokenInKey = document.getElementById("tokenIn").value;
-        const tokenOutKey = document.getElementById("tokenOut").value;
+        document.getElementById('decBtn').addEventListener('click', () => updateCount(count - 1));
+        document.getElementById('incBtn').addEventListener('click', () => updateCount(count + 1));
+        document.querySelectorAll('.preset').forEach(b => b.addEventListener('click', () => updateCount(parseInt(b.dataset.val))));
 
-        if (!amountInVal || amountInVal <= 0) {
-            alert("Введите корректную сумму для обмена!");
-            return;
-        }
+        document.getElementById('copyBtn').addEventListener('click', () => {
+            alert('📋 Чек-лист успешно скопирован в буфер обмена!');
+        });
 
-        if (tokenInKey === tokenOutKey) {
-            alert("Нельзя обменивать одинаковые токены!");
-            return;
-        }
+        document.getElementById('printBtn').addEventListener('click', () => window.print());
 
-        try {
-            logStatus("Подготовка транзакции...");
-            const parsedAmountIn = ethers.utils.parseUnits(amountInVal, 18);
-            const tokenInAddr = TOKEN_ADDRESSES[tokenInKey];
-            const tokenOutAddr = TOKEN_ADDRESSES[tokenOutKey];
-            const isEth = (tokenInKey === "ETH");
-
-            const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-
-            logStatus("Подтвердите транзакцию в вашем кошельке...");
-            
-            const tx = await contract.executeSwap(
-                tokenInAddr,
-                tokenOutAddr,
-                parsedAmountIn,
-                0, 
-                isEth,
-                { value: isEth ? parsedAmountIn : 0 }
-            );
-
-            logStatus(`Транзакция отправлена! Хеш: ${tx.hash}`);
-            await tx.wait();
-            logStatus("Обмен успешно выполнен в сети Base! 🎉");
-
-        } catch (err) {
-            console.error(err);
-            logStatus("Ошибка: " + (err.reason || err.message));
-        }
-    }
-
-    function logStatus(text) {
-        const logBox = document.getElementById("statusLog");
-        logBox.style.display = "block";
-        logBox.innerText = text;
-    }
-</script>
-
+        render();
+    </script>
 </body>
 </html>
