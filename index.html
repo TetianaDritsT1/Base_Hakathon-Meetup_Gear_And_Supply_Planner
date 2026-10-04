@@ -100,7 +100,7 @@
             const cats = {};
             baseItems.forEach(item => {
                 if (!cats[item.category]) cats[item.category] = [];
-                let total = item.amount * (item.unit === || 'шт/чел'  item.unit === 'шт' || item.unit === 'прд' || item.unit === 'пач' ? (item.unit === 'шт/чел' ? count : Math.ceil(count * item.amount / 6)) : count * item.amount / 6);
+                let total = item.amount * (item.unit === 'шт/чел' || item.unit === 'шт' || item.unit === 'прд' || item.unit === 'пач' ? (item.unit === 'шт/чел' ? count : Math.ceil(count * item.amount / 6)) : count * item.amount / 6);
                 cats[item.category].push({ ...item, total: Math.round(total * 10) / 10 });
             });
 
@@ -113,11 +113,12 @@
                 cats[cat].forEach(i => {
                     const el = document.createElement('div');
                     el.className = 'item-card bg-neutral-800/60 rounded-xl p-3 flex items-center justify-between border border-neutral-700/50';
-                    el.innerHTML = <div class="flex items-center gap-3"><span class="text-xl">${i.emoji}</span><span class="font-medium">${i.name}</span></div><span class="text-blue-400 font-bold">${i.total} ${i.unit === 'шт/чел' ? 'шт' : i.unit}</span>;
+                    el.innerHTML = `<div class="flex items-center gap-3"><span class="text-xl">${i.emoji}</span><span class="font-medium">${i.name}</span></div><span class="text-blue-400 font-bold">${i.total} ${i.unit === 'шт/чел' ? 'шт' : i.unit}</span>`;
                     listEl.appendChild(el);
                 });
             });
         }
+
         function updateCount(val) {
             count = Math.max(1, Math.min(50, val));
             countEl.textContent = count;
@@ -137,4 +138,5 @@
         render();
     </script>
 </body>
-</html>
+    </html>
+    
